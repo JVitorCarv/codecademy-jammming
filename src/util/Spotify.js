@@ -1,6 +1,6 @@
 import { clientIdInfo } from "./ClientID";
 const clientId = clientIdInfo
-const redirectUri = 'http://localhost:3000'
+const redirectUri = 'https://jamming-jvitorcarv.surge.sh/'
 let accessToken
 
 const Spotify = {
@@ -31,17 +31,39 @@ const Spotify = {
                 .then(json => {
                     if (!json.tracks) {
                         return []
-                    } else {
-                        return json.tracks.items.map(t => ({
-                            id: t.id,
-                            name: t.name,
-                            artist: t.artists[0].name,
-                            album: t.album.name,
-                            uri: t.uri
-                        }))
                     }
+                    return json.tracks.items.map(t => ({
+                        id: t.id,
+                        name: t.name,
+                        artist: t.artists[0].name,
+                        album: t.album.name,
+                        uri: t.uri
+                    }))
                 })
+    },
 
+    savePlaylist(name, trackUris) {
+        if (!name || !trackUris.length) {
+            return
+        }
+
+        const accessToken = Spotify.getAccessToken()
+        const headerAuth = { Authorization: `Bearer ${accessToken}`}
+        let userId
+
+        return fetch(`https://api.spotify.com/v1/me`, { headers: headerAuth })
+                .then(res => res.json())
+                .then(json => {
+                    userId = json.id
+                    return fetch(`https://api.spotify.com/v1/users/${userId}/playlists`, 
+                    { headers: headerAuth, method: 'POST', body: JSON.stringify({name: name})})
+                })
+                .then(res => res.json())
+                .then(json => {
+                    const playlistId = json.id
+                    return fetch(`https://api.spotify.com/v1/users/${userId}/playlists/${playlistId}/tracks`, 
+                    {headers: headerAuth, method: 'POST', body: JSON.stringify({ uris: trackUris })})
+                })
     }
 }
 
