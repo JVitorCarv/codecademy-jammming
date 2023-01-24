@@ -1,3 +1,11 @@
+# Deploy: https://jamming-jvitorcarv.surge.sh/
+
+# Warning!
+
+You need an access token from spotify to run this application in your local machine. Please, consult https://developer.spotify.com/documentation/general/guides/authorization/ for more information.
+
+Basically, you need a client id to proceed. Once you have a client id, which can be achieved following the spotify application registration flow (https://developer.spotify.com/my-applications/#!/applications), simply create a ClientID.js file in src/util/ and paste: export const clientIdInfo = '[YOUR_CLIENT_ID]'.
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
